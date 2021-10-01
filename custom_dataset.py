@@ -1,6 +1,6 @@
 import os
 import torch.utils.data
-import cv2
+from PIL import Image
 import pandas as pd
 
 
@@ -49,7 +49,7 @@ class PvDataset(torch.utils.data.Dataset):
         for second in range(0, 60, 10):
             time = time[0:-2] + "{:02d}".format(second)
             img_path = os.path.join("images", date, date + "_" + time + ".jpg")
-            image = cv2.imread(img_path)
+            image = Image.open(img_path)
             images.append(image)
 
         label = int(self.df.iloc[index, 1])
