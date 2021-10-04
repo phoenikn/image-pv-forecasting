@@ -1,5 +1,7 @@
 import os
+import torch
 import torch.utils.data
+import torchvision.transforms as transforms
 from PIL import Image
 import pandas as pd
 
@@ -9,7 +11,7 @@ class PvDataset(torch.utils.data.Dataset):
     The PV datasets, including the all-sky pictures and correlated power and energy
     """
 
-    def __init__(self, csv_path, images_folder="images", transform=None):
+    def __init__(self, csv_path, images_folder="images", transform=transforms.ToTensor()):
         """
 
         :param csv_path (string): Path of the csv for labels
@@ -45,14 +47,15 @@ class PvDataset(torch.utils.data.Dataset):
             time = time[0:3] + "{:02d}".format(int(time[3:5]) - 1) + time[5:]
 
         # Read the pictures per 10 seconds of last 60 seconds
-        images = []
+        images_stack = torch.empty([0, 1536, 2048])
         for second in range(0, 60, 10):
             time = time[0:-2] + "{:02d}".format(second)
             img_path = os.path.join("images", date, date + "_" + time + ".jpg")
             image = Image.open(img_path)
-            images.append(image)
+            images_stack = torch.cat((images_stack, self.transform(image)), 0)
 
         label = int(self.df.iloc[index, 1])
 
         # Return the six pictures of the last minute and the current power as label
-        return images, label
+        # The size of the output image tensor will be: 18*1536*2048
+        return images_stack, label
