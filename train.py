@@ -13,9 +13,9 @@ BATCH_SIZE = 16
 
 def main():
     norm_channels = np.full(
-        shape=18,
+        shape=3,
         fill_value=0.5,
-        dtype=np.int
+        dtype=np.float
     )
 
     transform = transforms.Compose([
@@ -42,6 +42,7 @@ def main():
         running_loss = 0.0
         for i, data in enumerate(train_loader, 0):
             inputs, labels = data
+            labels = labels.float()
 
             optimizer.zero_grad()
 
