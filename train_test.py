@@ -38,10 +38,13 @@ def main():
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    net.to(device)
+
     for epoch in range(2):
         running_loss = 0.0
         for i, data in enumerate(train_loader, 0):
-            inputs, labels = data
+            inputs, labels = data[0].to(device), data[1].to(device)
             labels = labels.float()
 
             optimizer.zero_grad()
@@ -58,6 +61,20 @@ def main():
                 running_loss = 0.0
 
     print("Finish!!!")
+
+    torch.save(net.state_dict(), "simpleCNN.pth")
+
+    mse = 0
+    total = 0
+    with torch.no_grad():
+        for data in test_loader:
+            inputs, labels = data[0].to(device), data[1].to(device)
+            outputs = net(inputs)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            mse += ((labels - predicted) * (labels - predicted))
+
+    print("MSE is: " + str(mse / total))
 
 
 if __name__ == "__main__":
