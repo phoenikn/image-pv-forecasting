@@ -52,6 +52,7 @@ class PvDataset(torch.utils.data.Dataset):
             time = time[0:-2] + "{:02d}".format(second)
             img_path = os.path.join("images", date, date + "_" + time + ".jpg")
             image = Image.open(img_path)
+            # Transform (ToTensor, resize, normalize) before stack images
             images_stack = torch.cat((images_stack, self.transform(image)), 0)
 
         label = int(self.df.iloc[index, 1])

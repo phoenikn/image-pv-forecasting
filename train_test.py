@@ -1,3 +1,5 @@
+import os
+
 from custom_dataset import PvDataset
 from simple_CNN import SimpleNet
 
@@ -12,16 +14,11 @@ BATCH_SIZE = 16
 
 
 def main():
-    norm_channels = np.full(
-        shape=3,
-        fill_value=0.5,
-        dtype=np.float
-    )
 
     transform = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Resize((1000, 1000)),
-        transforms.Normalize(mean=norm_channels, std=norm_channels)
+        transforms.Resize((1000, 1000))
+        # transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
     ])
 
     train_set = PvDataset("data/training_label.csv", transform=transform)
@@ -41,26 +38,28 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     net.to(device)
 
-    for epoch in range(2):
-        running_loss = 0.0
-        for i, data in enumerate(train_loader, 0):
-            inputs, labels = data[0].to(device), data[1].to(device)
-            labels = labels.float()
+    # The training module
+    if not os.path.exists("simpleCNN.pth"):
+        for epoch in range(2):
+            running_loss = 0.0
+            for i, data in enumerate(train_loader, 0):
+                inputs, labels = data[0].to(device), data[1].to(device)
+                labels = labels.float()
 
-            optimizer.zero_grad()
+                optimizer.zero_grad()
 
-            outputs = net(inputs)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
+                outputs = net(inputs)
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
 
-            running_loss += loss.item()
-            if i % 1000 == 999:
-                print('[%d, %5d] loss: %.3f' %
-                      (epoch + 1, i + 1, running_loss / 1000))
-                running_loss = 0.0
+                running_loss += loss.item()
+                if i % 1000 == 999:
+                    print('[%d, %5d] loss: %.3f' %
+                          (epoch + 1, i + 1, running_loss / 1000))
+                    running_loss = 0.0
 
-    print("Finish!!!")
+        print("Finish training!!!")
 
     torch.save(net.state_dict(), "simpleCNN.pth")
 

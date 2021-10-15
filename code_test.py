@@ -1,10 +1,13 @@
-import cv2
-from PIL import Image
+# import os
+#
+# import cv2
+# from PIL import Image
 import torch
 import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-img1 = Image.open("images/2018-08-25/2018-08-25_06-02-00.jpg")
+
+# img1 = Image.open("images/2018-08-25/2018-08-25_06-02-00.jpg")
 # img2 = Image.open("images/2018-08-25/2018-08-25_06-02-10.jpg")
 # ts = transforms.Compose([
 #     transforms.ToTensor()
@@ -26,3 +29,11 @@ img1 = Image.open("images/2018-08-25/2018-08-25_06-02-00.jpg")
 
 # batch = torch.rand(16, 3, 10, 10)
 # print(batch.size())
+# print(not os.path.exists("simpleCNN.pth"))
+
+# x = torch.randint(0, 255, (3, 5, 5))
+# x = x.type(torch.DoubleTensor)
+# print(x)
+# transform = transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
+# x = transform(x)
+# print(x)
