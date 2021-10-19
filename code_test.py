@@ -1,9 +1,9 @@
-# import os
+import os
 #
 # import cv2
 # from PIL import Image
-import torch
-import torchvision.transforms as transforms
+# import torch
+# import torchvision.transforms as transforms
 # import matplotlib.pyplot as plt
 
 
@@ -37,3 +37,16 @@ import torchvision.transforms as transforms
 # transform = transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
 # x = transform(x)
 # print(x)
+
+# data_dir = "/scratch/itee/uqsxu13"
+#
+# training_label_dir = os.path.join(data_dir, "label/training_label.csv")
+# test_label_dir = os.path.join(data_dir, "label/test_label.csv")
+#
+# image_dir = os.path.join(data_dir, "images")
+#
+# print(training_label_dir)
+# print(test_label_dir)
+# print(image_dir)
+
+print(os.name == "nt")

@@ -50,7 +50,7 @@ class PvDataset(torch.utils.data.Dataset):
         images_stack = torch.empty([0, 1000, 1000])
         for second in range(0, 60, 10):
             time = time[0:-2] + "{:02d}".format(second)
-            img_path = os.path.join("images", date, date + "_" + time + ".jpg")
+            img_path = os.path.join(self.images_folder, date, date + "_" + time + ".jpg")
             image = Image.open(img_path)
             # Transform (ToTensor, resize, normalize) before stack images
             images_stack = torch.cat((images_stack, self.transform(image)), 0)

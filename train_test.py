@@ -14,19 +14,33 @@ BATCH_SIZE = 16
 
 
 def main():
-
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Resize((1000, 1000))
         # transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
     ])
 
-    train_set = PvDataset("data/training_label.csv", transform=transform)
+    data_dir = "/scratch/itee/uqsxu13"
+    training_label_dir = os.path.join(data_dir, "label/training_label.csv")
+    test_label_dir = os.path.join(data_dir, "label/test_label.csv")
+    image_dir = os.path.join(data_dir, "images")
+
+    training_label_dir_win = "data/training_label.csv"
+    test_label_dir_win = "data/test_label.csv"
+    image_dir_win = "images"
+
+    # Change the directory if run at local
+    if os.name == "nt":
+        training_label_dir = training_label_dir_win
+        test_label_dir = test_label_dir_win
+        image_dir = image_dir_win
+
+    train_set = PvDataset(training_label_dir, images_folder=image_dir, transform=transform)
 
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=BATCH_SIZE,
                                                shuffle=False)
 
-    test_set = PvDataset("data/test_label.csv", transform=transform)
+    test_set = PvDataset(test_label_dir, images_folder=image_dir, transform=transform)
 
     test_loader = torch.utils.data.DataLoader(test_set, batch_size=BATCH_SIZE,
                                               shuffle=False)
@@ -35,7 +49,7 @@ def main():
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net.to(device)
 
     # The training module
@@ -59,9 +73,12 @@ def main():
                           (epoch + 1, i + 1, running_loss / 1000))
                     running_loss = 0.0
 
+        torch.save(net.state_dict(), "simpleCNN.pth")
         print("Finish training!!!")
-
-    torch.save(net.state_dict(), "simpleCNN.pth")
+    else:
+        print("Existed NN")
+        net.load_state_dict(torch.load("simpleCNN.pth", map_location=device))
+        net.eval()
 
     mse = 0
     total = 0
@@ -69,11 +86,18 @@ def main():
         for data in test_loader:
             inputs, labels = data[0].to(device), data[1].to(device)
             outputs = net(inputs)
-            _, predicted = torch.max(outputs.data, 1)
+            predicted = outputs[:, 0]
+            sub = torch.sub(predicted, labels)
+            se = sub.pow(2)
+            mse += torch.sum(se).item()
             total += labels.size(0)
-            mse += ((labels - predicted) * (labels - predicted))
+            # print("predicted:", predicted)
+            # print("labels:", labels)
+            # print("se:", torch.sum(se).item())
+            # print("count:", total)
 
-    print("MSE is: " + str(mse / total))
+    print("The total number of results:", total)
+    print("MSE is: ", mse / total)
 
 
 if __name__ == "__main__":
