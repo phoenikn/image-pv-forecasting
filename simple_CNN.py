@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class SimpleNet(torch.nn.Module):
@@ -21,7 +22,9 @@ class SimpleNet(torch.nn.Module):
     def forward(self, x):
         x = self.pool1(x)
         x = self.conv1(x)
+        x = F.relu(x)
         x = self.conv2(x)
+        x = F.relu(x)
         x = self.pool2(x)
         # input_for_linear has the shape [nr_of_observations, batch_size, in_features]
         x = torch.flatten(x, 1)
