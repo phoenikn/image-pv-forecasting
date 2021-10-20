@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.utils.data
 import torchvision
 import torchvision.transforms as transforms
-import numpy as np
+import math
 
 BATCH_SIZE = 16
 
@@ -81,8 +81,10 @@ def main():
         net.load_state_dict(torch.load("simpleCNN.pth", map_location=device))
         net.eval()
 
-    mse = 0
+    print("Device is:", device)
+    total_se = 0
     total = 0
+    observed_sum = 0
     with torch.no_grad():
         for data in test_loader:
             inputs, labels = data[0].to(device), data[1].to(device)
@@ -90,15 +92,24 @@ def main():
             predicted = outputs[:, 0]
             sub = torch.sub(predicted, labels)
             se = sub.pow(2)
-            mse += (torch.sum(se).item() / se.size(0))
+            total_se += torch.sum(se).item()
             total += se.size(0)
+            observed_sum += torch.sum(labels)
             # print("predicted:", predicted)
             # print("labels:", labels)
             # print("se:", torch.sum(se).item())
             # print("count:", total)
 
+    # MSE: Mean Square Error
+    # RMSE: Root Mean Square Error
+    # nRMSE: Normalized Root Mean Square Error
+    mse = total_se/total
+    rmse = math.sqrt(mse)
+    nrmse = rmse/(observed_sum/total)
     print("The total number of test data:", total)
-    print("MSE is: ", mse)
+    print("MSE is:", mse)
+    print("RMSE is:", rmse)
+    print("nRMSE is:", nrmse)
 
 
 if __name__ == "__main__":
