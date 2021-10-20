@@ -16,17 +16,18 @@ BATCH_SIZE = 16
 def main():
     transform = transforms.Compose([
         transforms.ToTensor(),
+        transforms.CenterCrop((1536, 1536)),
         transforms.Resize((1000, 1000))
         # transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
     ])
 
     data_dir = "/scratch/itee/uqsxu13"
-    training_label_dir = os.path.join(data_dir, "label/training_label.csv")
-    test_label_dir = os.path.join(data_dir, "label/test_label.csv")
+    training_label_dir = os.path.join(data_dir, "label/training_label_full.csv")
+    test_label_dir = os.path.join(data_dir, "label/test_label_full.csv")
     image_dir = os.path.join(data_dir, "images")
 
-    training_label_dir_win = "data/training_label.csv"
-    test_label_dir_win = "data/test_label.csv"
+    training_label_dir_win = "data/training_label_full.csv"
+    test_label_dir_win = "data/test_label_full.csv"
     image_dir_win = "images"
 
     # Change the directory if run at local
