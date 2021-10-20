@@ -90,15 +90,15 @@ def main():
             predicted = outputs[:, 0]
             sub = torch.sub(predicted, labels)
             se = sub.pow(2)
-            mse += torch.sum(se).item()
-            total += labels.size(0)
+            mse += (torch.sum(se).item() / se.size(0))
+            total += se.size(0)
             # print("predicted:", predicted)
             # print("labels:", labels)
             # print("se:", torch.sum(se).item())
             # print("count:", total)
 
-    print("The total number of results:", total)
-    print("MSE is: ", mse / total)
+    print("The total number of test data:", total)
+    print("MSE is: ", mse)
 
 
 if __name__ == "__main__":
