@@ -1,10 +1,11 @@
-import os
+# import os
 #
 # import cv2
 # from PIL import Image
-# import torch
-import torchvision.transforms as transforms
-# import matplotlib.pyplot as plt
+import torch
+# import torchvision.transforms as transforms
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
 # img1 = Image.open("images/2018-08-25/2018-08-25_06-02-00.jpg")
@@ -51,3 +52,31 @@ import torchvision.transforms as transforms
 # print(image_dir)
 
 # print(os.name == "nt")
+
+# table = pd.read_csv("data/test_label_full.csv")
+# power1 = table["power (W)"]
+# table = pd.read_csv("data/training_label_full.csv")
+# power2 = table["power (W)"]
+# table3 = pd.read_csv("data/pe20180401-20180831_Single.csv")
+# power3 = table3["power (W)"]
+
+# power1.plot()
+# power2.plot()
+# power3.plot()
+# plt.show()
+
+# predict = torch.load("predict_result.pt", map_location=torch.device("cpu"))
+# ground_truth = pd.read_csv("data/test_label_full.csv")["power (W)"]
+# predict = pd.DataFrame(predict).astype("float")
+#
+# predict.plot(legend=False)
+# ground_truth.plot()
+# plt.show()
+
+for day in range(25, 32):
+    daily_data = pd.read_csv("data/08-{}_label.csv".format(day))["power (W)"]
+    daily_data.plot()
+    plt.xlabel("timestamp")
+    plt.ylabel("power (W)")
+    plt.title("Power in 2018-08-{}".format(day))
+    plt.show()

@@ -29,9 +29,7 @@ class SimpleNet(torch.nn.Module):
         # input_for_linear has the shape [nr_of_observations, batch_size, in_features]
         x = torch.flatten(x, 1)
         x = self.fc1(x)
-        x = F.relu(x)
         x = self.fc2(x)
-        x = F.relu(x)
         x = self.fc3(x)
 
         return x

@@ -85,6 +85,7 @@ def main():
     total_se = 0
     total = 0
     observed_sum = 0
+    # predict_result = torch.tensor([])
     with torch.no_grad():
         for data in test_loader:
             inputs, labels = data[0].to(device), data[1].to(device)
@@ -94,12 +95,14 @@ def main():
             se = sub.pow(2)
             total_se += torch.sum(se).item()
             total += se.size(0)
-            observed_sum += torch.sum(labels)
+            observed_sum += torch.sum(labels).item()
+            # predict_result = torch.cat((predict_result, predicted))
             # print("predicted:", predicted)
             # print("labels:", labels)
             # print("se:", torch.sum(se).item())
             # print("count:", total)
 
+    # torch.save(predict_result, "predict_result.pt")
     # MSE: Mean Square Error
     # RMSE: Root Mean Square Error
     # nRMSE: Normalized Root Mean Square Error
