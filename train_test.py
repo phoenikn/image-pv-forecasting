@@ -56,7 +56,6 @@ def main():
     # The training module
     if not os.path.exists("simpleCNN.pth"):
         for epoch in range(2):
-            running_loss = 0.0
             for i, data in enumerate(train_loader, 0):
                 inputs, labels = data[0].to(device), data[1].to(device)
                 labels = labels.float()
@@ -67,12 +66,6 @@ def main():
                 loss = criterion(outputs, labels)
                 loss.backward()
                 optimizer.step()
-
-                running_loss += loss.item()
-                if i % 1000 == 999:
-                    print('[%d, %5d] loss: %.3f' %
-                          (epoch + 1, i + 1, running_loss / 1000))
-                    running_loss = 0.0
 
         torch.save(net.state_dict(), "simpleCNN.pth")
         print("Finish training!!!")
@@ -85,7 +78,6 @@ def main():
     total_se = 0
     total = 0
     observed_sum = 0
-    # predict_result = torch.tensor([])
     with torch.no_grad():
         for data in test_loader:
             inputs, labels = data[0].to(device), data[1].to(device)
@@ -96,13 +88,11 @@ def main():
             total_se += torch.sum(se).item()
             total += se.size(0)
             observed_sum += torch.sum(labels).item()
-            # predict_result = torch.cat((predict_result, predicted))
             # print("predicted:", predicted)
             # print("labels:", labels)
             # print("se:", torch.sum(se).item())
             # print("count:", total)
 
-    # torch.save(predict_result, "predict_result.pt")
     # MSE: Mean Square Error
     # RMSE: Root Mean Square Error
     # nRMSE: Normalized Root Mean Square Error

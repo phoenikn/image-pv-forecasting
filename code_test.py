@@ -2,10 +2,10 @@
 #
 # import cv2
 # from PIL import Image
-import torch
+# import torch
 # import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
-import pandas as pd
+# import matplotlib.pyplot as plt
+# import pandas as pd
 
 
 # img1 = Image.open("images/2018-08-25/2018-08-25_06-02-00.jpg")
@@ -72,11 +72,3 @@ import pandas as pd
 # predict.plot(legend=False)
 # ground_truth.plot()
 # plt.show()
-
-for day in range(25, 32):
-    daily_data = pd.read_csv("data/08-{}_label.csv".format(day))["power (W)"]
-    daily_data.plot()
-    plt.xlabel("timestamp")
-    plt.ylabel("power (W)")
-    plt.title("Power in 2018-08-{}".format(day))
-    plt.show()
