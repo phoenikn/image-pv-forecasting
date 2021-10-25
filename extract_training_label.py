@@ -1,6 +1,6 @@
 import pandas as pd
 
-raw_table = pd.read_csv("data/pe20180401-20180831_Single.csv")
+# raw_table = pd.read_csv("data/pe20180401-20180831_Single.csv")
 
 # training_table = raw_table.iloc[124251: 124953]
 # training_table = training_table[training_table["power (W)"] != 0]
@@ -15,6 +15,11 @@ raw_table = pd.read_csv("data/pe20180401-20180831_Single.csv")
 #     table.to_csv("data/08-{}_label.csv".format(day), index=False)
 #
 # print("Finish!")
+
+# sunny_tables = [pd.read_csv("data/08-29_label.csv"), pd.read_csv("data/08-30_label.csv"),
+#                 pd.read_csv("data/08-31_label.csv")]
+# sunny_tables = pd.concat(sunny_tables)
+# sunny_tables.to_csv("data/sunny_train_three.csv", index=False)
 
 
 # training_table.to_csv("data/training_label_full.csv", index=False)

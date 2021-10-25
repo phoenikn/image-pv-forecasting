@@ -22,11 +22,11 @@ def main():
     ])
 
     data_dir = "/scratch/itee/uqsxu13"
-    training_label_dir = os.path.join(data_dir, "label/training_label_full.csv")
+    training_label_dir = os.path.join(data_dir, "label/sunny_train_three.csv")
     test_label_dir = os.path.join(data_dir, "label/test_label_full.csv")
     image_dir = os.path.join(data_dir, "images")
 
-    training_label_dir_win = "data/training_label_full.csv"
+    training_label_dir_win = "data/sunny_train_three.csv"
     test_label_dir_win = "data/test_label_full.csv"
     image_dir_win = "images"
 
@@ -55,7 +55,7 @@ def main():
 
     # The training module
     if not os.path.exists("simpleCNN.pth"):
-        for epoch in range(2):
+        for epoch in range(5):
             for i, data in enumerate(train_loader, 0):
                 inputs, labels = data[0].to(device), data[1].to(device)
                 labels = labels.float()
@@ -78,6 +78,9 @@ def main():
     total_se = 0
     total = 0
     observed_sum = 0
+
+    predict_result = torch.tensor([]).to(device)
+
     with torch.no_grad():
         for data in test_loader:
             inputs, labels = data[0].to(device), data[1].to(device)
@@ -88,10 +91,14 @@ def main():
             total_se += torch.sum(se).item()
             total += se.size(0)
             observed_sum += torch.sum(labels).item()
+
+            predict_result = torch.cat((predict_result, predicted))
             # print("predicted:", predicted)
             # print("labels:", labels)
             # print("se:", torch.sum(se).item())
             # print("count:", total)
+
+    torch.save(predict_result, "predict_result.pt")
 
     # MSE: Mean Square Error
     # RMSE: Root Mean Square Error

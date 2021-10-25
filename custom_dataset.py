@@ -48,11 +48,19 @@ class PvDataset(torch.utils.data.Dataset):
 
         # Read the pictures per 10 seconds of last 60 seconds
         images_stack = torch.empty([0, 1000, 1000])
+        image = None
         for second in range(0, 60, 10):
             time = time[0:-2] + "{:02d}".format(second)
             img_path = os.path.join(self.images_folder, date, date + "_" + time + ".jpg")
-            image = Image.open(img_path)
-            # Transform (ToTensor, resize, normalize) before stack images
+
+            # If the image is missed, use the previous image to fill the empty
+            try:
+                image = Image.open(img_path)
+            except FileNotFoundError:
+                if image is None:
+                    raise Exception("Missing the first picture!")
+
+            # Transform (ToTensor, Crop, resize) before stack images
             images_stack = torch.cat((images_stack, self.transform(image)), 0)
 
         label = int(self.df.iloc[index, 1])

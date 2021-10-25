@@ -2,10 +2,10 @@
 #
 # import cv2
 # from PIL import Image
-# import torch
+import torch
 # import torchvision.transforms as transforms
-# import matplotlib.pyplot as plt
-# import pandas as pd
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
 # img1 = Image.open("images/2018-08-25/2018-08-25_06-02-00.jpg")
@@ -65,10 +65,4 @@
 # power3.plot()
 # plt.show()
 
-# predict = torch.load("predict_result.pt", map_location=torch.device("cpu"))
-# ground_truth = pd.read_csv("data/test_label_full.csv")["power (W)"]
-# predict = pd.DataFrame(predict).astype("float")
-#
-# predict.plot(legend=False)
-# ground_truth.plot()
-# plt.show()
+
