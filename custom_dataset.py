@@ -47,7 +47,7 @@ class PvDataset(torch.utils.data.Dataset):
             time = time[0:3] + "{:02d}".format(int(time[3:5]) - 1) + time[5:]
 
         # Read the pictures per 10 seconds of last 60 seconds
-        images_stack = torch.empty([0, 1000, 1000])
+        images_stack = torch.empty([0, 224, 224])
         image = None
         for second in range(0, 60, 10):
             time = time[0:-2] + "{:02d}".format(second)

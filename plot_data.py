@@ -2,18 +2,29 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import torch
 
-# for day in range(25, 32):
-#     daily_data = pd.read_csv("data/08-{}_label.csv".format(day))["power (W)"]
-#     daily_data.plot()
-#     plt.xlabel("timestamp")
-#     plt.ylabel("power (W)")
-#     plt.title("Power in 2018-08-{}".format(day))
-#     plt.show()
 
-predict = torch.load("predict_result.pt", map_location=torch.device("cpu"))
-ground_truth = pd.read_csv("data/test_label_full.csv")["power (W)"]
-predict = pd.DataFrame(predict).astype("float")
+def plot_daily(panel: str):
+    for day in range(25, 32):
+        if panel == "hires":
+            hires = pd.read_csv("data/extracted/08-{}_hires.csv".format(day))["power (kW)"]
+            hires *= -1
+            hires.plot()
+        else:
+            low_res = pd.read_csv("data/extracted/08-{}_{}.csv".format(day, panel))["power (W)"]
+            low_res.plot()
 
-predict.plot(legend=False)
-ground_truth.plot()
-plt.show()
+        plt.xlabel("timestamp")
+        plt.ylabel("power")
+        plt.title("Power in 2018-08-{}".format(day))
+        plt.show()
+
+
+plot_daily(input("Which panel?"))
+
+# predict = torch.load("predict_result.pt", map_location=torch.device("cpu"))
+# ground_truth = pd.read_csv("data/extracted/test_label_full.csv")["power (W)"]
+# predict = pd.DataFrame(predict).astype("float")
+#
+# predict.plot(legend=False)
+# ground_truth.plot()
+# plt.show()

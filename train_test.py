@@ -9,6 +9,7 @@ import torch.utils.data
 import torchvision
 import torchvision.transforms as transforms
 import math
+from custom_res18 import resnet18
 
 BATCH_SIZE = 16
 
@@ -17,7 +18,8 @@ def main():
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.CenterCrop((1536, 1536)),
-        transforms.Resize((1000, 1000))
+        # transforms.Resize((1000, 1000)),
+        transforms.Resize((224, 224))
         # transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))
     ])
 
@@ -26,8 +28,8 @@ def main():
     test_label_dir = os.path.join(data_dir, "label/test_label_full.csv")
     image_dir = os.path.join(data_dir, "images")
 
-    training_label_dir_win = "data/sunny_train_three.csv"
-    test_label_dir_win = "data/test_label_full.csv"
+    training_label_dir_win = "data/extracted/sunny_train_three.csv"
+    test_label_dir_win = "data/extracted/test_label_full.csv"
     image_dir_win = "images"
 
     # Change the directory if run at local
@@ -46,7 +48,8 @@ def main():
     test_loader = torch.utils.data.DataLoader(test_set, batch_size=BATCH_SIZE,
                                               shuffle=False)
 
-    net = SimpleNet()
+    # net = SimpleNet()
+    net = resnet18()
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 
@@ -55,7 +58,7 @@ def main():
 
     # The training module
     if not os.path.exists("simpleCNN.pth"):
-        for epoch in range(5):
+        for epoch in range(2):
             for i, data in enumerate(train_loader, 0):
                 inputs, labels = data[0].to(device), data[1].to(device)
                 labels = labels.float()
