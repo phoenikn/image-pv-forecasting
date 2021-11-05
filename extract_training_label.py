@@ -1,4 +1,6 @@
 import pandas as pd
+# from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 # raw_table = pd.read_csv("data/pe20180401-20180831_FixedWest.csv")
 
@@ -30,6 +32,16 @@ import pandas as pd
 #
 # print("Finish!")
 
+# to_norm_train = pd.read_csv("data/extracted/sunny_train_three.csv")
+to_norm_test = pd.read_csv("data/extracted/test_label_full.csv")
+
+min_max = lambda x: (x - np.min(x)) / (np.max(x) - np.min(x))
+
+# to_norm_train[["power (W)"]] = to_norm_train[["power (W)"]].apply(min_max)
+to_norm_test[["power (W)"]] = to_norm_test[["power (W)"]].apply(min_max)
+
+# to_norm_train.to_csv("data/extracted/sunny_train_three_norm.csv", index=False)
+to_norm_test.to_csv("data/extracted/test_label_norm.csv", index=False)
 
 # training_table.to_csv("data/training_label_full.csv", index=False)
 # test_table.to_csv("data/test_label_full.csv", index=False)

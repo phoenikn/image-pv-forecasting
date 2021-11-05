@@ -61,10 +61,12 @@ class PvDataset(torch.utils.data.Dataset):
                     raise Exception("Missing the first picture!")
 
             # Transform (ToTensor, Crop, resize) before stack images
-            images_stack = torch.cat((images_stack, self.transform(image)), 0)
+            r = self.transform(image).unbind(0)[0][None, :]
+            # Red channel only
+            images_stack = torch.cat((images_stack, r), 0)
 
         label = int(self.df.iloc[index, 1])
 
         # Return the six pictures of the last minute and the current power as label
-        # The size of the output image tensor will be: 18*1536*2048
+        # The size of the output image tensor will be: 6*244*244
         return images_stack, label
