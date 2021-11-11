@@ -21,14 +21,25 @@ def plot_daily(panel: str):
 
 # plot_daily(input("Which panel?"))
 
-# predict = torch.load("predict_result.pt", map_location=torch.device("cpu"))
-ground_truth = pd.read_csv("data/extracted/sunny_train_three_norm.csv")["power (W)"]
-# predict = pd.DataFrame(predict).astype("float")
+# gr = pd.read_csv("data/extracted/US_0107_gray.csv")["grayscale"]
+# gr.plot(label="grayscale")
+# plt.legend()
+# plt.show()
 
-# predict.plot(legend=False)
-ground_truth.plot()
+hires = pd.read_csv("data/PV Data Hires/20180701-0712.csv")
+hi_01 = hires[hires["DateTime"].str.startswith("1/07")]
+hi_01_p = hi_01["AQG1_B001_PM001.Sts.P_kW"]
+hi_01_p = hi_01_p * -1
+hi_01_p.plot()
+plt.xlabel("timestamp")
+plt.ylabel("power")
 plt.show()
 
-# train_set_norm = pd.read_csv("data/extracted/test_label_norm.csv")["power (W)"]
-# train_set_norm.plot()
+# predict = torch.load("predict_result.pt", map_location=torch.device("cpu"))
+# ground_truth = pd.read_csv("data/extracted/test_label_norm.csv")["power (W)"]
+# predict = pd.DataFrame(predict).astype("float")
+#
+# predict.plot(legend=False)
+# ground_truth.plot()
 # plt.show()
+
